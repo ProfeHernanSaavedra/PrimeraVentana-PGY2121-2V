@@ -5,6 +5,11 @@
  */
 package Vista;
 
+import Controlador.Calculo;
+import Modelo.Numero;
+import java.awt.Color;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Hernan
@@ -32,6 +37,7 @@ public class VentanaPpal extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jtxt_num1 = new javax.swing.JTextField();
         jtxt_num2 = new javax.swing.JTextField();
+        jcb_operaciones = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jbtn_calcular = new javax.swing.JButton();
         jbtn_limpiar = new javax.swing.JButton();
@@ -50,6 +56,8 @@ public class VentanaPpal extends javax.swing.JFrame {
 
         jLabel4.setText("Número 2: ");
 
+        jcb_operaciones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-Operaciones-", "Sumar", "Restar", "Multiplicar", "Dividir" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -65,15 +73,22 @@ public class VentanaPpal extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addGap(48, 48, 48)
                         .addComponent(jtxt_num1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(64, 64, 64)
+                .addComponent(jcb_operaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jtxt_num1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jtxt_num1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jcb_operaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -189,26 +204,56 @@ public class VentanaPpal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbtn_calcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtn_calcularActionPerformed
-        
-        int num1 = Integer.parseInt(this.jtxt_num1.getText());
-        int num2 = Integer.parseInt(this.jtxt_num2.getText());
-        
-        int total = num1 + num2;
-        
-        String totalStr = String.valueOf(total);
-        
-        this.jlbl_mensaje.setText("La suma tota es: " + totalStr);
-        
-        
+
+        int num1=0,num2=0;
+        //recuperacion de datos desde interfaz gráfica
+        try {
+            num1 = Integer.parseInt(this.jtxt_num1.getText());
+            num2 = Integer.parseInt(this.jtxt_num2.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,"Datos no válidos","Validación",0);
+            this.jtxt_num1.setBackground(Color.red);
+            this.jtxt_num2.setBackground(Color.red);
+        }
+
+        Calculo cal = new Calculo();
+        Numero numeros = new Numero(num1, num2);
+
+        if (this.jcb_operaciones.getSelectedIndex() == 1) {
+            int total = cal.sumar(numeros);
+            String totalStr = String.valueOf(total);
+            this.jlbl_mensaje.setText("La suma tota es: " + totalStr);
+        } else {
+            if (this.jcb_operaciones.getSelectedIndex() == 2) {
+                int total = cal.restar(numeros);
+                String totalStr = String.valueOf(total);
+                this.jlbl_mensaje.setText("La Resta es: " + totalStr);
+            } else {
+                if (this.jcb_operaciones.getSelectedIndex() == 3) {
+                    int total = cal.multiplicar(numeros);
+                    String totalStr = String.valueOf(total);
+                    this.jlbl_mensaje.setText("La Multiplicación es: " + totalStr);
+                } else {
+                    if (this.jcb_operaciones.getSelectedIndex() == 4) {
+                        double total = cal.dividir(numeros);
+                        String totalStr = String.valueOf(total);
+                        this.jlbl_mensaje.setText("La División es: " + totalStr);
+                    }
+                }
+            }
+
+        }
+
+
     }//GEN-LAST:event_jbtn_calcularActionPerformed
 
     private void jbtn_limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtn_limpiarActionPerformed
-        
+
         this.jtxt_num1.setText("");
         this.jtxt_num2.setText("");
         this.jlbl_mensaje.setText("");
         this.jtxt_num1.requestFocus();
-        
+
     }//GEN-LAST:event_jbtn_limpiarActionPerformed
 
     /**
@@ -256,6 +301,7 @@ public class VentanaPpal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JButton jbtn_calcular;
     private javax.swing.JButton jbtn_limpiar;
+    private javax.swing.JComboBox<String> jcb_operaciones;
     private javax.swing.JLabel jlbl_mensaje;
     private javax.swing.JTextField jtxt_num1;
     private javax.swing.JTextField jtxt_num2;
